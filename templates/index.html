@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carregar Boletos</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Carregar Planilha de Boletos</h1>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="arquivo" accept=".xlsx">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
