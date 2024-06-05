@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, configure_uploads, DOCUMENTS
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 import pandas as pd
 import sqlite3
 
