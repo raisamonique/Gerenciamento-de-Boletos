@@ -1,0 +1,11 @@
+CREATE TABLE boletos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT,
+    cpf TEXT,
+    data_emissao TEXT,
+    data_registro TEXT,
+    data_vencimento TEXT,
+    valor REAL,
+    cod_linha_digitavel TEXT,
+    link_boleto TEXT
+);

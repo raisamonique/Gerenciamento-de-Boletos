@@ -4,9 +4,10 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import pandas as pd
 import sqlite3
+import os
 
 app = Flask(__name__)
-app.config['UPLOADED_DOCUMENTS_DEST'] = 'uploads'
+app.config['UPLOADED_DOCUMENTS_DEST'] = 'C:\\Users\\F0994560\\site_boleto\\uploads'
 documents = UploadSet('documents', DOCUMENTS)
 configure_uploads(app, documents)
 
@@ -24,7 +25,7 @@ def upload():
 
             if filename.endswith('.xlsx'):
                 try:
-                    # Carregamendo dos dados da planilha
+                    # Carregamento dos dados da planilha
                     df = pd.read_excel(os.path.join(app.config['UPLOADED_DOCUMENTS_DEST'], filename))
 
                     # Validação dos dados 
@@ -38,24 +39,57 @@ def upload():
                     # Salvando inf no bd 
                     conn = sqlite3.connect('boletos.db')
                     cursor = conn.cursor()
+                    linhas_importadas = 0
+                    linhas_nao_importadas = 0
+                    linhas_atualizadas = 0
+                    linhas_nao_atualizadas = 0
+                    linhas_repetidas = 0
+
                     for index, row in df.iterrows():
+                        # Verificação se o boleto já existe no bd
                         cursor.execute('''
-                            INSERT INTO boletos (nome, cpf, data_emissao, data_registro, data_vencimento, valor, cod_linha_digitavel, link_boleto)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                        ''', (
-                            row['nome'],
-                            row['cpf'],
-                            row['data_emissao'],
-                            row['data_registro'],
-                            row['data_vencimento'],
-                            row['valor'],
-                            row['cod_linha_digitavel'],
-                            row['link_boleto']
-                        ))
+                            SELECT * FROM boletos WHERE cpf = ? AND cod_linha_digitavel = ?
+                        ''', (row['cpf'], row['cod_linha_digitavel']))
+                        boleto_existente = cursor.fetchone()
+
+                        if boleto_existente:
+                            # Boleto já existe
+                            linhas_repetidas += 1
+                        else:
+                            # Inserir o boleto no bd
+                            try:
+                                cursor.execute('''
+                                    INSERT INTO boletos (nome, cpf, data_emissao, data_registro, data_vencimento, valor, cod_linha_digitavel, link_boleto)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                                ''', (
+                                    row['nome'],
+                                    row['cpf'],
+                                    row['data_emissao'],
+                                    row['data_registro'],
+                                    row['data_vencimento'],
+                                    row['valor'],
+                                    row['cod_linha_digitavel'],
+                                    row['link_boleto']
+                                ))
+                                linhas_importadas += 1
+                            except Exception as e:
+                                linhas_nao_importadas += 1
+                                print(f"Erro ao inserir boleto: {e}")
+
                     conn.commit()
                     conn.close()
 
-                    return 'Arquivo carregado com sucesso!'
+                    # Criar resultados
+                    resultados = {
+                        'total_linhas': len(df),
+                        'linhas_importadas': linhas_importadas,
+                        'linhas_nao_importadas': linhas_nao_importadas,
+                        'linhas_atualizadas': linhas_atualizadas,
+                        'linhas_nao_atualizadas': linhas_nao_atualizadas,
+                        'linhas_repetidas': linhas_repetidas
+                    }
+
+                    return render_template('resultados.html', resultados=resultados)
                 except Exception as e:
                     return f'Erro ao carregar o arquivo: {e}'
             else:

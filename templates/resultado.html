@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Relatório de Importação</title>
+</head>
+<body>
+    <h1>Relatório Final</h1>
+    <p>Total de linhas na planilha: {{ resultados.total_linhas }}</p>
+    <p>Linhas importadas: {{ resultados.linhas_importadas }}</p>
+    <p>Linhas não importadas (erro nos dados da planilha): {{ resultados.linhas_nao_importadas }}</p>
+    <p>Linhas atualizadas (pagamento identificado): {{ resultados.linhas_atualizadas }}</p>
+    <p>Linhas não atualizadas (erro nos dados da planilha): {{ resultados.linhas_nao_atualizadas }}</p>
+    <p>Linhas já cadastradas anteriormente (boletos repetidos): {{ resultados.linhas_repetidas }}</p>
+</body>
+</html>
