@@ -21,7 +21,7 @@ def create_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             id_externo TEXT UNIQUE,  
             nome VARCHAR(100),
-            cpf TEXT UNIQUE,
+            cpf TEXT,
             data_emissao DATE,
             data_registro DATE,
             data_vencimento DATE,
