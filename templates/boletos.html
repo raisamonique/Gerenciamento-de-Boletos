@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Boletos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .boleto {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .boleto-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .boleto-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .boleto-buttons button {
+            background-color: #4CAF50; /* Verde água */
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function copiarLinhaDigitavel(linhaDigitavel) {
+            navigator.clipboard.writeText(linhaDigitavel)
+                .then(() => {
+                    alert('Código da linha digitável copiado para a área de transferência!');
+                })
+                .catch(err => {
+                    console.error('Falha ao copiar:', err);
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Resultados da Consulta</h1>
+        {% if cpf %}
+            <h2>CPF: {{ cpf }}</h2>
+            {% if boletos %}
+                <p>Foram encontrados os seguintes boletos para este mês:</p>
+                <ul>
+                    {% for boleto in boletos %}
+                        <li class="boleto">
+                            <p><strong>Nome:</strong> {{ boleto.nome }}</p> 
+                            <div class="boleto-info">
+                                <span>{{ boleto.cod_linha_digitavel }}</span>
+                                <span>R$ {{ boleto.valor }}</span>
+                                <span>{{ boleto.data_vencimento }}</span>
+                                <div class="boleto-buttons">
+                                    <button onclick="copiarLinhaDigitavel('{{ boleto.cod_linha_digitavel }}')">Copiar</button>
+                                    <a href="{{ boleto.link_boleto }}" target="_blank"><button>Exibir Boleto</button></a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Nenhum boleto encontrado para este CPF.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

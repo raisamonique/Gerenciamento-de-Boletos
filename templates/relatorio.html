@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Relatório de Importação</title>
+</head>
+<body>
+    <h1>Relatório de Importação</h1>
+
+    <p>Linhas totais: {{ linhas_total }}</p>
+    <p>Linhas importadas: {{ linhas_importadas }}</p>
+    <p>Linhas não importadas: {{ linhas_nao_importadas }}</p>
+
+    <h2>Erros:</h2>
+    <ul>
+        {% for erro in erros %}
+            <li>{{ erro }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if linhas_importadas == linhas_total and erros == [] %}
+        <p style="color: green;">Sua planilha foi importada com sucesso!</p>
+    {% endif %}
+
+</body>
+</html>
