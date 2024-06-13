@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, configure_uploads, DOCUMENTS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
+from datetime import datetime
 import pandas as pd
 import sqlite3
 import os
@@ -176,16 +177,16 @@ def consultar_boletos():
         if boletos:
             formatted_boletos = [
                 {
-                    "cod_linha_digitavel": boleto[3],
-                    "cpf": boleto[1],
-                    "data_emissao": boleto[6],
-                    "data_registro": boleto[7],
-                    "data_vencimento": boleto[5],
+                    "cod_linha_digitavel": boleto[8],
+                    "cpf": boleto[3],
+                    "data_emissao": datetime.strptime(boleto[4], '%Y-%m-%d').strftime('%d/%m/%Y'),
+                    "data_registro": datetime.strptime(boleto[5], '%Y-%m-%d').strftime('%d/%m/%Y'),
+                    "data_vencimento": datetime.strptime(boleto[6], '%Y-%m-%d').strftime('%d/%m/%Y'),
                     "id": boleto[0],
-                    "id_externo": boleto[8],
+                    "id_externo": boleto[1],
                     "link_boleto": boleto[9],
                     "nome": boleto[2],
-                    "valor": boleto[4]
+                    "valor": boleto[7]
                 }
                 for boleto in boletos
             ]

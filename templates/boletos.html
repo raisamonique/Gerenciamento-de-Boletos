@@ -5,109 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de Boletos</title>
     <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
 
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0; 
+  line-height: 1.6;
+}
 
-        input[type="text"] {
-            width: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-right: 10px;
-        }
+.container {
+  background-color: #fff;
+  padding: 50px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
 
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+h1,
+h2,
+p {
+  font-size: 1.0em;
+}
 
-        .boleto {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 3px;
-        }
+input[type="text"] {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 1em;
+}
 
-        .boleto-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
 
-        .boleto-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-        }
+.boleto {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-        .boleto-buttons button {
-            background-color: #4CAF50; /* Verde água */
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+.boleto-info {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.boleto-info span {
+  font-size: 0.8em; 
+}
+
+.boleto-codigo {
+  font-size: 0.8em;
+  margin-bottom: 2px; 
+  border: 1px solid #ccc; /* Adiciona borda em volta do código de barras */
+  padding: 5px; /* Adiciona espaçamento interno */
+}
+
+.boleto-valor {
+  border: 1px solid #ccc; /* Adiciona borda em volta do valor */
+  padding: 5px;
+}
+
+.boleto-data {
+  border: 1px solid #ccc; /* Adiciona borda em volta da data */
+  padding: 5px;
+}
+
+.boleto-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.boleto-buttons button {
+  background-color: #4CAF50; /* Verde água */
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+}
     </style>
-    <script>
-        function copiarLinhaDigitavel(linhaDigitavel) {
-            navigator.clipboard.writeText(linhaDigitavel)
-                .then(() => {
-                    alert('Código da linha digitável copiado para a área de transferência!');
-                })
-                .catch(err => {
-                    console.error('Falha ao copiar:', err);
-                });
-        }
-    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Resultados da Consulta</h1>
+        <h1>Consulta de Boletos</h1>
+        <form method="POST">
+            <label for="cpf">Confirme o CPF:</label>
+            <input type="text" id="cpf" name="cpf" placeholder="Apenas números" required>
+            <button type="submit">Ok</button>
+        </form>
         {% if cpf %}
-            <h2>CPF: {{ cpf }}</h2>
+            <h2>{{ boletos[0][2] }}</h2>
             {% if boletos %}
-                <p>Foram encontrados os seguintes boletos para este mês:</p>
-                <ul>
-                    {% for boleto in boletos %}
-                        <li class="boleto">
-                            <p><strong>Nome:</strong> {{ boleto.nome }}</p> 
-                            <div class="boleto-info">
-                                <span>{{ boleto.cod_linha_digitavel }}</span>
-                                <span>R$ {{ boleto.valor }}</span>
-                                <span>{{ boleto.data_vencimento }}</span>
-                                <div class="boleto-buttons">
-                                    <button onclick="copiarLinhaDigitavel('{{ boleto.cod_linha_digitavel }}')">Copiar</button>
-                                    <a href="{{ boleto.link_boleto }}" target="_blank"><button>Exibir Boleto</button></a>
-                                </div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>Nenhum boleto encontrado para este CPF.</p>
+                {% for boleto in boletos %}
+                    <div class="boleto">
+                        <div class="boleto-info">
+                            <span class="boleto-codigo">{{ boleto.cod_linha_digitavel }}</span> 
+                            <span class="boleto-valor">R$ {{ boleto.valor }}</span> 
+                            <span class="boleto-data">{{ boleto.data_vencimento }}</span>  
+                        </div>
+                          <div class="boleto-buttons">
+                            <button id="copy-button" data-clipboard-text="{{ boleto.cod_linha_digitavel }}">Copiar</button> 
+                            <a href="{{ boleto.link_boleto }}" target="_blank">  <!-- Link para visualizar o boleto -->
+                                <button>Exibir Boleto</button>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                <p>Esta plataforma e para retirada de boletos mensais, caso tenha debitos por gentileza comparecer no setor financeiro ou de negociação.</p>
+             {% else %}
+                <p>{{ message }}</p>
             {% endif %}
         {% endif %}
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+   </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js">
+   </script>
+    <script>
+        new ClipboardJS('#copy-button');
+    </script>
 </body>
 </html>
