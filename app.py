@@ -2,11 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, configure_uploads, DOCUMENTS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 import pandas as pd
 import sqlite3
 import os
 import re
+import shutil
+import logging
+
+# Configure o logging
+logging.basicConfig(filename='boletos_log.txt', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 app.config['UPLOADED_DOCUMENTS_DEST'] = 'C:/Users/F0994560/site_boleto/uploads'
@@ -36,6 +42,28 @@ def create_database():
 
 # Verificação se na base de dados já existe, caso não criar
 create_database()
+
+# Função para fazer backup do banco de dados
+def backup_database():
+    backup_file = 'boletos_base_backup.db'
+    shutil.copyfile('boletos_base.db', backup_file)
+    logging.info(f"Backup do banco de dados criado como '{backup_file}'")  
+
+# Função para limpar o banco de dados
+def clean_database():
+    conn = sqlite3.connect('boletos_base.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM boletos')
+    conn.commit()
+    conn.close()
+    logging.info("Banco de dados limpo!")
+
+# Função de backup a cada 90 dias
+last_backup = datetime.now() - timedelta(days=90)
+if (datetime.now() - last_backup).days >= 90:
+    backup_database()
+    clean_database()
+    last_backup = datetime.now()
 
 
 @app.route('/')

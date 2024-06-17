@@ -1,0 +1,28 @@
+2024-06-17 14:02:27,193 - INFO - Backup do banco de dados criado como 'boletos_base_backup.db'
+2024-06-17 14:02:27,287 - INFO - Banco de dados limpo!
+2024-06-17 14:02:27,350 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-06-17 14:02:27,350 - INFO - [33mPress CTRL+C to quit[0m
+2024-06-17 14:02:27,350 - INFO -  * Restarting with stat
+2024-06-17 14:02:36,662 - INFO - Backup do banco de dados criado como 'boletos_base_backup.db'
+2024-06-17 14:02:36,729 - INFO - Banco de dados limpo!
+2024-06-17 14:02:36,753 - WARNING -  * Debugger is active!
+2024-06-17 14:02:36,757 - INFO -  * Debugger PIN: 121-530-399
+2024-06-17 14:02:52,325 - INFO - 127.0.0.1 - - [17/Jun/2024 14:02:52] "GET /aluno HTTP/1.1" 200 -
+2024-06-17 14:02:56,141 - INFO - 127.0.0.1 - - [17/Jun/2024 14:02:56] "GET / HTTP/1.1" 200 -
+2024-06-17 14:02:56,364 - INFO - 127.0.0.1 - - [17/Jun/2024 14:02:56] "GET /static/styles.css HTTP/1.1" 200 -
+2024-06-17 14:03:05,774 - INFO - 127.0.0.1 - - [17/Jun/2024 14:03:05] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:03:10,591 - INFO - 127.0.0.1 - - [17/Jun/2024 14:03:10] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:03:15,104 - INFO - 127.0.0.1 - - [17/Jun/2024 14:03:15] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:03:21,787 - INFO - 127.0.0.1 - - [17/Jun/2024 14:03:21] "GET /aluno HTTP/1.1" 200 -
+2024-06-17 14:03:25,276 - INFO - 127.0.0.1 - - [17/Jun/2024 14:03:25] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:05:16,222 - INFO - 127.0.0.1 - - [17/Jun/2024 14:05:16] "POST /upload HTTP/1.1" 200 -
+2024-06-17 14:05:38,639 - INFO - 127.0.0.1 - - [17/Jun/2024 14:05:38] "GET /aluno HTTP/1.1" 200 -
+2024-06-17 14:05:41,736 - INFO - 127.0.0.1 - - [17/Jun/2024 14:05:41] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:05:54,657 - INFO - 127.0.0.1 - - [17/Jun/2024 14:05:54] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:06:31,494 - INFO - 127.0.0.1 - - [17/Jun/2024 14:06:31] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:06:35,563 - INFO - 127.0.0.1 - - [17/Jun/2024 14:06:35] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:06:39,169 - INFO - 127.0.0.1 - - [17/Jun/2024 14:06:39] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:06:41,853 - INFO - 127.0.0.1 - - [17/Jun/2024 14:06:41] "POST /consultar_boletos HTTP/1.1" 200 -
+2024-06-17 14:08:01,065 - INFO -  * Detected change in 'C:\\Users\\F0994560\\site_boleto\\app.py', reloading
+2024-06-17 14:08:01,262 - INFO -  * Restarting with stat
