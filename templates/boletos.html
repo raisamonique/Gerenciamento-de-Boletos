@@ -5,149 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de Boletos</title>
     <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to top, #e0e0e0, #808080);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            line-height: 0.8;
+        }
 
-body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to top, #e0e0e0, #808080);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0; 
-  line-height: 1.6;
-}
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 10px;
+        }
 
-.container {
-  background-color: #fff;
-  padding: 50px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+        h1 {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
 
-h1 {
-  font-size: 1.2em; 
-}
-h2 {
-  font-size: 0.9em;
-}
-p{
-  font-size: 0.9em;
-}
- .message {
-  color: red; 
-}
+        h2 {
+            text-align: center;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
 
-input[type="text"] {
-  width: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 1em;
-}
+        p {
+            text-align: center;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
 
-button {
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-}
+        input[type="text"] {
+            font-size: 13px;
+            width: 20%;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 1px;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+            padding: 8px;
+        }
 
-.boleto {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 3px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+        button {
+            background-color: #00C896;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin: 5px 0;
+        }
+        .message {
+            text-align: center;
+            font-size: 0.9em;
+            color: red;
+        }
 
-.boleto-info {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 10px;
-}
+        .boleto {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f2f2f2;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
 
-.boleto-info span {
-  font-size: 0.8em; 
-}
+        .boleto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.boleto-codigo {
-  font-size: 0.8em;
-  margin-bottom: 1.0px; 
-  border: 1px solid #ccc; /* borda em volta do código de barras */
-  padding: 6px; /*  espaçamento interno */
-}
+        .boleto-details {
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+            margin-bottom: 10px;
+        }
 
-.boleto-valor {
-  border: 1px solid #ccc; /*  borda em volta do valor */
-  padding: 6px;
+        .boleto-info {
+            display: flex;
+            justify-content: space-between; /* Distribui espaço entre os elementos */
+            align-items: center;  /* Alinha os elementos verticalmente ao centro */
+            flex-grow: 1;
+            width: 100%; /* Ajuste a largura se necessário */
+        }
 
-}
+        .boleto-info div {
+            padding: 5px 15px;
+            /* border: 1px solid #ccc; /*
+            border-radius: 3px;
+            margin-right: 5px; /* Espaçamento entre os elementos */
+        }
 
-.boleto-data {
-  border: 1px solid #ccc; /*  borda em volta da data */ 
-  padding: 6px;
-}
+        .cod-linha-digitavel {
+            font-size: 0.8em;
+	    border: 1px solid #ccc;
+            margin-right: 2px;
+            padding: 5px 10px;
+            white-space: nowrap; /* Evita quebra de linha */
+        }
 
-.boleto-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  gap : 10px;
-}
+        .valor {
+            font-size: 0.8em;
+	    border: 1px solid #ccc;
+ 	    margin-right: 2px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding: 5px 10px;
+        }
 
-.boleto-buttons button {
-  background-color: #4CAF50; /* Verde água */
-  color: #fff;
-  border: none;
-  padding: 9px 13px;
-  border-radius: 50px;
-  cursor: pointer;
-}
+        .data {
+            font-size: 0.8em;
+	    border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding: 5px 10px;
+        }
+
+        .boleto-buttons {
+            display: flex;
+            justify-content: space-between; /* Alinha os botões à direita */
+            margin-top: 10px;
+        }
+
+        .boleto-buttons button {
+            background-color: #00C896; /* Verde água */
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Consulta de Boletos</h1>
-        <form method="POST">
+        <form method="POST" action="/consultar_boletos">
             <label for="cpf">Confirme o CPF:</label>
             <input type="text" id="cpf" name="cpf" placeholder="Apenas números" required>
             <button type="submit">Ok</button>
         </form>
-       {% if cpf %}
-             {% if boletos and boletos[0].get('nome') %}
-                <h2>{{ boletos[0].nome }}</h2> 
+        {% if cpf %}
+            {% if boletos %}
                 {% for boleto in boletos %}
                     <div class="boleto">
-                        <div class="boleto-info">
-                            <span class="boleto-codigo">{{ boleto.cod_linha_digitavel }}</span> 
-                            <span class="boleto-valor">R$ {{ boleto.valor }}</span> 
-                            <span class="boleto-data">{{ boleto.data_vencimento }}</span>  
+                        <div class="boleto-header">
+                            <h2>{{boleto.nome}}</h2>
                         </div>
-                          <div class="boleto-buttons">
-                            <button id="copy-button" data-clipboard-text="{{ boleto.cod_linha_digitavel }}">Copiar</button> 
-                            <a href="{{ boleto.link_boleto }}" target="_blank">  <!-- Link para visualizar o boleto -->
-                                <button>Exibir Boleto</button>
-                             </a>
+                        <div class="boleto-details">
+                            <div class="boleto-info">
+                                <div class="cod-linha-digitavel">
+                                    <span class="cod_linha_digitavel">{{ boleto.cod_linha_digitavel }}</span>
+                                </div>
+                                <div class="valor">
+                                    <span class="boleto-valor">R$ {{ boleto.valor }}</span>
+                                </div>
+                                <div class="data">
+                                    <span class="boleto-data">{{ boleto.data_vencimento }}</span>
+                                </div>
+                                <div class="boleto-buttons">
+                                     <button id="copy-button" onclick="copiarLinhaDigitavel('{{ boleto.cod_linha_digitavel }}')" data-clipboard-text="{{ boleto.cod_linha_digitavel }}">Copiar</button>
+                                    <a href="{{ boleto.link_boleto }}" target="_blank">
+                                        <button>Exibir Boleto</button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
-                <p style="font-weight: bold;">Esta plataforma é destinada à retirada de boletos mensais;<br> caso tenha débitos, agradecemos se puder comparecer ao setor financeiro ou de negociação.<strong></p>
+                <p style="font-weight: bold ;">Esta plataforma é destinada à retirada de boletos mensais;
+                    <br>
+                    caso tenha débitos, por gentileza comparecer ao setor financeiro ou de negociação.</p>
             {% else %}
                 <p class="message">Nenhum boleto encontrado para este CPF.</p>
-            {% endif %} 
-        {% endif %} 
+            {% endif %}
+        {% endif %}
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <script>
         new ClipboardJS('#copy-button');
+        // Iterar por cada boleto e remover a quebra de linha
+        const boletos = document.querySelectorAll('.boleto');
+        boletos.forEach(boleto => {
+            const codLinhaDigitavel = boleto.querySelector('.cod_linha_digitavel').textContent.replace(/\n/g, '');
+            boleto.querySelector('.cod_linha_digitavel').textContent = codLinhaDigitavel;
+        });
+
+        // Função para copiar linha digitável
+        function copiarLinhaDigitavel(linhaDigitavel) {
+            navigator.clipboard.writeText(linhaDigitavel)
+                .then(() => {
+                    alert('Código da linha digitável copiado para a área de transferência!');
+                })
+                .catch(err => {
+                    console.error('Falha ao copiar:', err);
+                });
+        }
     </script>
 </body>
 </html>

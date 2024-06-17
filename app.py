@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, configure_uploads, DOCUMENTS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-from datetime import datetime
+from datetime import datetime,timedelta
 import pandas as pd
 import sqlite3
 import os
@@ -34,7 +34,7 @@ def create_database():
     conn.commit()
     conn.close()
 
-# Verificar se a base de dados já existe, senão cria
+# Verificação se na base de dados já existe, caso não criar
 create_database()
 
 
@@ -53,8 +53,8 @@ def upload():
 
             if filename.endswith('.xlsx'):
                 try:
-                    # Carregar dados da planilha (especificar tipos de dados das colunas de data)
-                    print(f"Caminho do arquivo: {file_path}") # Verifique o caminho
+                    # Carregar dados da planilha 
+                    print(f"Caminho do arquivo: {file_path}") 
                     df = pd.read_excel(file_path, 
                                       names=['id_externo', 'nome', 'cpf', 'data_emissao', 'data_vencimento', 
                                              'data_registro', 'valor', 'cod_linha_digitavel', 'link_boleto'],
@@ -62,59 +62,59 @@ def upload():
                                              'data_vencimento': 'datetime64[ns]', 'data_registro': 'datetime64[ns]',
                                              'cod_linha_digitavel': str, 'link_boleto': str},
                                       converters={'valor': lambda x: float(x.replace('R$ ', '').replace(',', '.'))}, 
-                                      date_format='%d/%m/%Y',  # Formato de data dia/mes/ano
+                                      date_format='%d/%m/%Y',  # importante Formato de data dia/mes/ano
                                      )
-                    print(df.info()) # Verifique se o DataFrame está sendo criado
-                    print(df.head())  # Verifique os dados lidos
+                    print(df.info()) #importante internamente verificação se o DataFrame está sendo criado
+                    print(df.head())  #importante internamente verificaçãoVerifique os dados lidos
 
-                    # Forçar conversão para string após ler a planilha
+                    # Forçar conversão para string na planilha
                     df['id_externo'] = df['id_externo'].astype(str) 
 
-                    # Contadores para o relatório
+                    # Contadores do rel.
                     linhas_total = len(df)
                     linhas_importadas = 0
                     linhas_nao_importadas = 0
-                    erros = []  # Lista para armazenar os erros
+                    erros = []  # Lista para armazenar no rel.
 
-                    # Salvar informações no banco de dados
+                    # Salvando inf no bd
                     conn = sqlite3.connect('boletos_base.db')
                     cursor = conn.cursor()
                     for index, row in df.iterrows():
                         try:
-                            # Validar dados e formatar as datas (já são datas no Pandas, então apenas converte para string)
-                            id_externo = str(row['id_externo'])  # Forçando a conversão para string
+                            # Validação dos dados e formatação das  datas e outros componentes string  
+                            id_externo = str(row['id_externo'])  
                             if not id_externo.isdigit() or len(id_externo) != 8:
                                 erros.append(f"Linha {index + 2}: ID Externo inválido. Deve ser um número de 8 dígitos.")
                                 linhas_nao_importadas += 1
-                                continue  # Pula para a próxima linha
+                                continue  
 
                             if not isinstance(row['nome'], str) or len(row['nome'].strip()) == 0:
                                 erros.append(f"Linha {index + 2}: Nome inválido. Deve ser uma string não vazia.")
                                 linhas_nao_importadas += 1
-                                continue  # Pula para a próxima linha
+                                continue  
 
                             if not isinstance(row['cpf'], str) or not row['cpf'].isdigit() or len(row['cpf']) != 11:
                                 erros.append(f"Linha {index + 2}: CPF inválido. Deve ser um número de 11 dígitos.")
                                 linhas_nao_importadas += 1
-                                continue  # Pula para a próxima linha
+                                continue  
 
                             if not isinstance(row['cod_linha_digitavel'], str) or len(row['cod_linha_digitavel']) != 54:
                                 erros.append(f"Linha {index + 2}: Código da Linha Digitável inválido. Deve ter 54 caracteres.")
                                 linhas_nao_importadas += 1
-                                continue  # Pula para a próxima linha
+                                continue  
 
                             data_emissao = row['data_emissao'].strftime('%Y-%m-%d') 
                             data_registro = row['data_registro'].strftime('%Y-%m-%d') 
                             data_vencimento = row['data_vencimento'].strftime('%Y-%m-%d') 
 
-                            # Inserir o boleto no banco de dados
+                            # Inserção do boleto no bd
                             cursor.execute('''
                                 INSERT INTO boletos (id_externo, nome, cpf, data_emissao, data_registro, data_vencimento, valor, cod_linha_digitavel, link_boleto)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                             ''', (
-                                id_externo,  # id_externo agora é uma string
+                                id_externo,  
                                 row['nome'],
-                                row['cpf'],  # Deixe o CPF como string
+                                row['cpf'],  
                                 data_emissao,
                                 data_registro,
                                 data_vencimento,
@@ -124,20 +124,20 @@ def upload():
                             ))
                             linhas_importadas += 1
                         except sqlite3.IntegrityError as e:
-                            # Tratar erro de violação de chave UNIQUE
+                            # Tratamento erro de violação de chave UNIQUE
                             erros.append(
                                 f"Linha {index + 2}: Erro ao importar: {e}. CPF ou ID Externo já existe no banco de dados.")
                             linhas_nao_importadas += 1
                         except Exception as e:
-                            # Captura outros tipos de erro
+                            # Captura de outros erros
                             erros.append(f"Linha {index + 2}: Erro ao importar: {e}")
                             linhas_nao_importadas += 1
 
-                    # Fechar a conexão com o banco de dados
+                    # Fechamento da conexão com bd
                     conn.commit()
                     conn.close()
 
-                    # Verifique se todas as linhas foram importadas com sucesso
+                    # Verificaçãodas linhas
                     if linhas_importadas == linhas_total:
                         message = "Sua planilha foi importada com sucesso!"
                         return render_template('relatorio.html', message=message,
@@ -157,21 +157,28 @@ def upload():
                 return 'Formato de arquivo inválido. Por favor, utilize arquivos .xlsx'
     return 'Erro ao carregar o arquivo.'
 
-@app.route('/relatorio')
+@app.route('/relatorio')# Rota HTML rel.
 def relatorio():
     return render_template('relatorio.html')
 
-@app.route('/aluno')
+@app.route('/aluno')# Rota HTML aluno.
 def aluno():
     return render_template('aluno.html')
 
-@app.route('/consultar_boletos', methods=['POST'])
+@app.route('/consultar_boletos', methods=['POST'])# Rota HTML consulta_boletos
 def consultar_boletos():
     if request.method == 'POST':
         cpf = request.form['cpf']
         conn = sqlite3.connect('boletos_base.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM boletos WHERE cpf = ?', (cpf,))
+        # Calcula a data limite de 20 dias atrás teste 
+        data_limite = datetime.now() - timedelta(days=20)
+    
+        cursor.execute('''
+            SELECT * FROM boletos 
+            WHERE cpf = ? 
+            AND data_vencimento >= ? 
+        ''', (cpf, data_limite.strftime('%Y-%m-%d')))  # Filtra por data de vencimento
         boletos = cursor.fetchall()
 
         if boletos:
